@@ -13,6 +13,12 @@ async def on_ready():
     print('id: ' + str(bot.user.id))
     load_cogs()
 
+@bot.event
+async def on_message(message):
+    if message.channel.id == 708507541784494111:
+        await message.add_reaction('✅')
+        await message.add_reaction('❌')
+
 def update_avatar(filename):
     if os.path.isfile(filename):
         with open(filename, 'rb') as avatar:
@@ -35,7 +41,10 @@ async def on_message_edit(old, new):
 async def quit(ctx):
     await ctx.send('bye')
     os._exit(0)
+
 try:
     bot.run(config.token)
 except OSError:
     os._exit(0)
+
+
