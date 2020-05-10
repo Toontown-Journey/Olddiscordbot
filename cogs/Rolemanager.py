@@ -3,12 +3,17 @@
 from datetime import date
 
 import MySQLdb
-#from sshtunnel import SSHTunnelForwarder
 import discord
 from discord.ext import commands
-#import paramiko 
+
 from core.Config import get_config
 from random import randrange
+
+
+# unused imports
+# from sshtunnel import SSHTunnelForwarder
+# import paramiko
+
 
 def calculate_time(join_time):
     date1 = date.today()
@@ -31,7 +36,7 @@ class Rolemanager(commands.Cog):
                                  ssh_pkey=self.mypkey,
                                  remote_bind_address=('localhost', config.sshPort)) as tunnel:
             """
-        self.db = MySQLdb.connect('localhost', config.mysqlUsername, config.mysqlPassword, config.mysqlDatabase)
+        self.db = MySQLdb.connect(config.mysqlHost, config.mysqlUsername, config.mysqlPassword, config.mysqlDatabase)
         self.cursor = self.db.cursor
 
 
@@ -39,9 +44,9 @@ class Rolemanager(commands.Cog):
     def get_total_experience(self, member):
         sql = 'SELECT * FROM experience'
         try:
-            cursor.execute(sql)
+            self.cursor.execute(sql)
 
-            results = cursor.fetchall()
+            results = self.cursor.fetchall()
             for row in results:
                 resultsMember = row[0]
                 totalExperience = row[1]
@@ -58,7 +63,7 @@ class Rolemanager(commands.Cog):
             self.cursor.execute(sql)
             self.db.commit()
         except:
-            db.rollback()
+            self.db.rollback()
 
     def update_total_experience(self, member, totalExperience):
         sql = "UPDATE experience SET xp = " + totalExperience + " WHERE member = " + member
@@ -66,8 +71,7 @@ class Rolemanager(commands.Cog):
             self.cursor.execute(sql)
             self.db.commit()
         except:
-            db.rollback()
-        
+            self.db.rollback()
 
     @commands.Cog.listener()
     async def on_message(self, message):
