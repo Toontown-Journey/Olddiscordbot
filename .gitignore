@@ -1,0 +1,25 @@
+# Python Cache
+__pycache__/
+
+# Python artifacts:
+*.pyc
+
+# Eclipse IDE:
+.project
+.pydevproject
+
+# Visual Studio
+.vs
+
+# PyCharm
+.idea
+
+# Mac directory info:
+.DS_Store
+
+# Windows directory info:
+Thumbs.db
+
+# Prevent token from accidently being uploaded
+config.json
+/venv/

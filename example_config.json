@@ -1,0 +1,12 @@
+{
+	"Bot Prefix": "!",
+	"Bot Token": "Token.Here",
+	"Cog Directory": "/cogs/",
+	"Bot Owner": [
+		111111111111111111,
+		222222222222222222
+	],
+	"Bot Description": "General Multi-purpose bot for Toontown Journey",
+	"Disabled Cogs": []
+}
+

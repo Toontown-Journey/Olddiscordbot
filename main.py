@@ -1,81 +1,69 @@
-import discord
-from discord.ext import commands
-import asyncio
-import os
-import config
-from datetime import date
-import MySQLdb
+#  Copyright (c) 2020. Toontown Journey. All rights reserved
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), description='discord bot')
-db = MySQLdb.connect("198.54.125.59","anonuwzz_discord","test123","anonuwzz_discord" )
-cursor = db.cursor
+import os
+
+from discord.ext import commands
+
+from core import Config
+
+# grabs any configuration data
+config = Config.get_config()
+# Sets up the bot object, forcing case_insensitivity on
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(config.prefix), description=config.bot_description,
+                   case_insensitive=True)
+
+
 @bot.event
-async def on_ready():
-    print('Logging in...')
-    print('username: ' + str(bot.user.name))
-    print('id: ' + str(bot.user.id))
+async def on_ready():  # Actions to occur once the bot has connected and logged in
+    # Stop storing the token in config
+    # for security reasons.
+    del config.token
+    print(f'Connected! \nUsername: {bot.user}\nClient ID: {bot.user.id}')
     load_cogs()
 
-def calculateTime(join_time):
-    date1 = date.today()
-    date2 = join_time
-    weeks = ( date1- date2).days// 7
-    return weeks
 
-def getTotalMessages(member):
-    return 
-
-def setTotalMessages(member):
-    return 
-    data = {
-        member: member.totalMessages
-    }
-    with io.open('data.yaml', w, ecoding='utf8') as f:
-        yaml.dump(data, f, default_flow_style=False, allow_unicode=True)
-        
-@bot.event
+@bot.event  # process any valid message as a command
 async def on_message(message):
-    if message.channel.id == 708507541784494111:
-        await message.add_reaction('✅')
-        await message.add_reaction('❌')
-
-    return
-    member = message.author
-    memeber.totalMessages = getTotalMessages(member)
-    member.totalMessages += 1
-
-    setTotalMessages(member)
-    weeks = calculateTime(member.joined_at)
-    if weeks >= 2 and member.totalMessages >= 100:
-       await member.add_roles(discord.utils.get(member.guild.roles, name='Toons+'))
+    ctx = await bot.get_context(message)
+    if ctx.valid:
+        await bot.process_commands(message)
 
 
 def update_avatar(filename):
     if os.path.isfile(filename):
         with open(filename, 'rb') as avatar:
-            bot.edit_profile(avatar=avatar.read())
-def load_cogs():
-    for subdir in next(os.walk(config.cog_dir))[1]:
+            bot.user.edit(avatar=avatar.read())
+
+
+def load_cogs():  # load all files located in the cogs directory and attempt to load them as a cog
+    for cog in [i.strip(".py") for i in os.listdir(config.cog_dir) if os.path.isfile(config.cog_dir + i)]:
         try:
-            bot.load_extension('cogs.{}.cog'.format(subdir))
-            print('loaded plugin: {}'.format(subdir))
+            if 'cogs.{}'.format(cog) not in config.disabled_cogs:
+                bot.load_extension('cogs.{}'.format(cog))
         except Exception as error:
             exception = '{0}: {1}'.format(type(error).__name__, error)
-            print('Failed to load {}: {}'.format(subdir, exception))
+            print('Failed to load {}: {}'.format(cog, exception))
+    print('Loaded Cogs: {}'.format(list(bot.cogs)).strip("'"))
+
 
 @bot.event
-async def on_message_edit(old, new):
-    await bot.process_commands(new)
-
-@bot.command(pass_context=True)
-@commands.has_role("Toontown Journey Staff")
-async def quit(ctx):
-    await ctx.send('bye')
-    os._exit(0)
-
-try:
-    bot.run(config.token)
-except OSError:
-    os._exit(0)
+async def on_message_edit(old, new):  # allow running commands on edit
+    ctx = await bot.get_context(new)
+    if ctx.valid:
+        await bot.process_commands(new)
 
 
+# prepares the bot to be started
+def start_bot():
+    if not hasattr(config, 'token') or config.token is None:
+        raise Config.InvalidConfigError("Token not defined in config!")
+    try:
+        bot.run(config.token)
+    except RuntimeError:
+        raise Config.InvalidConfigError("Token is invalid")
+
+
+# Make sure this file is being ran,
+# and not being imported.
+if __name__ == '__main__':
+    start_bot()
