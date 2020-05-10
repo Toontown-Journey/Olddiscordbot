@@ -3,11 +3,16 @@
 from datetime import date
 
 import MySQLdb
-#from sshtunnel import SSHTunnelForwarder
 import discord
 from discord.ext import commands
-#import paramiko 
+
 from core.Config import get_config
+
+
+# unused imports
+# from sshtunnel import SSHTunnelForwarder
+# import paramiko
+
 
 def calculate_time(join_time):
     date1 = date.today()
@@ -30,34 +35,32 @@ class Rolemanager(commands.Cog):
                                  ssh_pkey=self.mypkey,
                                  remote_bind_address=('localhost', config.sshPort)) as tunnel:
             """
-        self.db = MySQLdb.connect('localhost', config.mysqlUsername, config.mysqlPassword, config.mysqlDatabase)
+        self.db = MySQLdb.connect(config.mysqlHost, config.mysqlUsername, config.mysqlPassword, config.mysqlDatabase)
         self.cursor = self.db.cursor
-
-
 
     def get_total_messages(self, member):
         sql = 'SELECT * FROM total_messages'
         try:
-            cursor.execute(sql)
+            self.cursor.execute(sql)
 
-            results = cursor.fetchall()
+            results = self.cursor.fetchall()
             for row in results:
                 resultsMember = row[0]
                 totalMessages = row[1]
                 if member == resultsMember:
                     return totalMessages
-                
+
             return "New user"
         except:
             print('Error: Unable to fetch data')
 
     def set_total_messages(self, member, totalMessages):
-        sql = "INSERT INTO total_messages( " + member  + ','  + " " + totalMessages + ")"
+        sql = "INSERT INTO total_messages( " + member + ',' + " " + totalMessages + ")"
         try:
             self.cursor.execute(sql)
             self.db.commit()
         except:
-            db.rollback()
+            self.db.rollback()
 
     def update_total_messages(self, member, totalMessages):
         sql = "UPDATE total_messages SET Messages = " + totalMessages + " WHERE Name = " + member
@@ -65,8 +68,7 @@ class Rolemanager(commands.Cog):
             self.cursor.execute(sql)
             self.db.commit()
         except:
-            db.rollback()
-        
+            self.db.rollback()
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -76,12 +78,12 @@ class Rolemanager(commands.Cog):
             await message.add_reaction('❌')
         member = message.author
         if self.get_total_messages(member) == 'New user':
-           #No entry for this member, create a new one
+            # No entry for this member, create a new one
             member.totalMessages = 0
             self.set_total_messages(member, member.totalMessages)
         else:
             member.totalMessages = self.get_total_messages(member)
- 
+
         member.totalMessages += 1
 
         self.update_total_messages(member, member.totalMessages)
