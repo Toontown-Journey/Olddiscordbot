@@ -15,7 +15,8 @@
   "SSHPassword": "SomePassword",
   "SSHPort": 20,
   "SSHKeyFilePath": "/~",
-  "SSHKeyPassword": "SomePassword"
+  "SSHKeyPassword": "SomePassword",
+  "MysqlDatabase": "discord"
 
 }
 

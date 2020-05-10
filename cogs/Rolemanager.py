@@ -3,10 +3,10 @@
 from datetime import date
 
 import MySQLdb
-from sshtunnel import SSHTunnelForwarder
+#from sshtunnel import SSHTunnelForwarder
 import discord
 from discord.ext import commands
-import paramiko 
+#import paramiko 
 from core.Config import get_config
 
 def calculate_time(join_time):
@@ -21,14 +21,17 @@ class Rolemanager(commands.Cog):
     def __init__(self, bot, config):
         self.bot = bot
         self.config = config
+        """
         self.mypkey = paramiko.RSAKey.from_private_key_file(config.sshKeyFilePath, config.sshKeyPassword)
+      
         with SSHTunnelForwarder( (config.mysqlHost, config.sshPort),
                                  ssh_username=config.sshUsername,
                                  ssh_password=config.sshPassword,
                                  ssh_pkey=self.mypkey,
                                  remote_bind_address=('localhost', config.sshPort)) as tunnel:
-             self.db = MySQLdb.connect('localhost', config.mysqlUsername, config.mysqlPassword, "anonuwzz_discord")
-             self.cursor = self.db.cursor
+            """
+        self.db = MySQLdb.connect('localhost', config.mysqlUsername, config.mysqlPassword, config.mysqlDatabase)
+        self.cursor = self.db.cursor
 
 
 
