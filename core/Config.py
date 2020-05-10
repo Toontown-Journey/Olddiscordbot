@@ -47,7 +47,7 @@ class Config:
         self.owners = _config["Bot Owner"]
         self.bot_description = _config["Bot Description"]
         self.disabled_cogs: [str] = _config["Disabled Cogs"]
-        self.mysqlHost = _config["MysqlHost"]
+        self.mysqlHost = _config["MysqlAddress"]
         self.mysqlUsername = _config["MysqlUsername"]
         self.mysqlPassword = _config["MysqlPassword"]
         self.sshUsername = _config['SSHUsername']

@@ -15,16 +15,16 @@ def calculate_time(join_time):
     weeks = (date1 - date2).days // 7
     return weeks
 
-mypkey = paramiko.RSAKey.from_private_key_file(config.sshKeyFilePath)
 
 class Rolemanager(commands.Cog):
 
     def __init__(self, bot, config):
         self.bot = bot
         self.config = config
+        self.mypkey = paramiko.RSAKey.from_private_key_file(config.sshKeyFilePath)
         with SSHTunnelForwarder( (config.mysqlHost, config.sshPort),
                                  ssh_username=config.sshUsername,
-                                 ssh_pkey=mypkey,
+                                 ssh_pkey=self.mypkey,
                                  remote_bind_address=(config.mysqlHost, config.sshPort)) as tunnel:
              self.db = MySQLdb.connect('localhost', config.mysqlUsername, config.mysqlPassword, "anonuwzz_discord")
              self.cursor = self.db.cursor
