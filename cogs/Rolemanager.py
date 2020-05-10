@@ -3,11 +3,11 @@
 from datetime import date
 
 import MySQLdb
+from sshtunnel import SSHTunnelForwarder
 import discord
 from discord.ext import commands
-
+import paramiko 
 from core.Config import get_config
-
 
 def calculate_time(join_time):
     date1 = date.today()
@@ -15,14 +15,21 @@ def calculate_time(join_time):
     weeks = (date1 - date2).days // 7
     return weeks
 
+mypkey = paramiko.RSAKey.from_private_key_file(config.sshKeyFilePath)
 
 class Rolemanager(commands.Cog):
 
     def __init__(self, bot, config):
         self.bot = bot
         self.config = config
-        self.db = MySQLdb.connect(config.mysqlHost, config.mysqlUsername, config.mysqlPassword, "anonuwzz_discord")
-        self.cursor = self.db.cursor
+        with SSHTunnelForwarder( (config.mysqlHost, config.sshPort),
+                                 ssh_username=config.sshUsername,
+                                 ssh_pkey=mypkey,
+                                 remote_bind_address=(config.mysqlHost, 3306)) as tunnel:
+             self.db = MySQLdb.connect('localhost', config.mysqlUsername, config.mysqlPassword, "anonuwzz_discord")
+             self.cursor = self.db.cursor
+
+
 
     def get_total_messages(self, member):
         sql = 'SELECT * FROM total_messages'
