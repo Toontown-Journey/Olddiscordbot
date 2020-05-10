@@ -1,6 +1,7 @@
 #  Copyright (c) 2020. Toontown Journey. All rights reserved
 
 import io
+import subprocess
 import textwrap
 import traceback
 from contextlib import redirect_stdout
@@ -106,8 +107,25 @@ class Admin(commands.Cog):
         else:
             await msg.edit(content=f"`{cog}` was not enabled, the cog is either invalid, or could not be started.")
 
+    @commands.command()
+    @Checks.is_owner()  # Potentially dangerous command, bot owner only
+    async def git(self, ctx, *, args):
+        result = ""
+        try:
+            result = subprocess.check_output(f'git {args}', encoding="utf=8", shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as re:
+            result = re.stdout
+        finally:
+            # split it up if too large
+            if len(result) >= 2000:
+                pages = (len(result) // 1900) + 1
+                for i in range(0, pages):
+                    await ctx.send(f'```batch\n{result[1900 * i:1900 * (i + 1)]}\n```')
+            else:
+                await ctx.send(f'```batch\n{result}\n```')
+
     @commands.command(name="eval")
-    @Checks.is_owner()
+    @Checks.is_owner()  # Potentially dangerous command, bot owner only
     async def _eval(self, ctx, *, code: str):
         # Strip off any code block formatting
         code = code.replace('```py', '')
