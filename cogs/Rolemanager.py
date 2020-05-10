@@ -21,7 +21,7 @@ class Rolemanager(commands.Cog):
     def __init__(self, bot, config):
         self.bot = bot
         self.config = config
-        self.db = MySQLdb.connect("198.54.125.59", "anonuwzz_discord", "test123", "anonuwzz_discord")
+        self.db = MySQLdb.connect("198.54.125.59", "anonuwzz_discord", config.mysqlPassword, "anonuwzz_discord")
         self.cursor = self.db.cursor
 
     def get_total_messages(self, member):
