@@ -24,7 +24,7 @@ class Admin(commands.Cog):
         return cog
 
     @commands.command(aliases=["reload", "reloadcog", "rload"])
-    @commands.check_any(Checks.is_owner(), commands.has_permissions(administrator=True))
+    @Checks.is_owner()
     async def reload_cog(self, ctx, cog: str = "all"):
         msg = await ctx.send('Reloading Cogs. . .')
         failed_to_reload = ""
@@ -84,7 +84,7 @@ class Admin(commands.Cog):
         await msg.edit(content=f"Successfully loaded `{cog}`")
 
     @commands.command(aliases=["disablecog", "dcog"])
-    @commands.check_any(Checks.is_owner(), commands.has_permissions(administrator=True))
+    @Checks.is_owner()
     async def disable(self, ctx, cog):
         msg = await ctx.send("Attempting to disable cog. . .")
         cog = self.validify_cog(cog)
@@ -96,7 +96,7 @@ class Admin(commands.Cog):
             await msg.edit(content=f"`{cog}` was not disabled, the cog is either invalid, or not running.")
 
     @commands.command(aliases=["enablecog", "ecog"])
-    @commands.check_any(Checks.is_owner(), commands.has_permissions(administrator=True))
+    @Checks.is_owner()
     async def enable(self, ctx, cog):
         msg = await ctx.send("Attempting to enable cog. . .")
         cog = self.validify_cog(cog)

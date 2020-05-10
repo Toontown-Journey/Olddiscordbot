@@ -47,7 +47,9 @@ class Config:
         self.owners = _config["Bot Owner"]
         self.bot_description = _config["Bot Description"]
         self.disabled_cogs: [str] = _config["Disabled Cogs"]
-        self.mysqlPassword = _config["MysqlPassword"] #store the password in config for better secrurity
+        self.mysqlHost = _config["MysqlHost"]
+        self.mysqlUsername = _config["MysqlUsername"]
+        self.mysqlPassword = _config["MysqlPassword"]
 
     def disable_cog(self, cog):
         if cog not in self.disabled_cogs:

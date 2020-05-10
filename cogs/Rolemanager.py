@@ -2,11 +2,11 @@
 
 from datetime import date
 
+import MySQLdb
 import discord
 from discord.ext import commands
 
 from core.Config import get_config
-import MySQLdb
 
 
 def calculate_time(join_time):
@@ -21,7 +21,7 @@ class Rolemanager(commands.Cog):
     def __init__(self, bot, config):
         self.bot = bot
         self.config = config
-        self.db = MySQLdb.connect("198.54.125.59", "anonuwzz_discord", config.mysqlPassword, "anonuwzz_discord")
+        self.db = MySQLdb.connect(config.mysqlHost, config.mysqlUsername, config.mysqlPassword, "anonuwzz_discord")
         self.cursor = self.db.cursor
 
     def get_total_messages(self, member):
