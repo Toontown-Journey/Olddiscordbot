@@ -14,7 +14,8 @@
   "SSHUsername": "SomeUsername",
   "SSHPassword": "SomePassword",
   "SSHPort": "20",
-  "SSHKeyFilePath": "/~"
+  "SSHKeyFilePath": "/~",
+  "SSHKeyPassword": "SomePassword"
 
 }
 

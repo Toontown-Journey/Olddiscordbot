@@ -21,7 +21,7 @@ class Rolemanager(commands.Cog):
     def __init__(self, bot, config):
         self.bot = bot
         self.config = config
-        self.mypkey = paramiko.RSAKey.from_private_key_file(config.sshKeyFilePath)
+        self.mypkey = paramiko.RSAKey.from_private_key_file(config.sshKeyFilePath, config.sshKeyPassword)
         with SSHTunnelForwarder( (config.mysqlHost, config.sshPort),
                                  ssh_username=config.sshUsername,
                                  ssh_pkey=self.mypkey,

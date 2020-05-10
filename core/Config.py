@@ -54,6 +54,7 @@ class Config:
         self.sshPassword = _config['SSHPassword']
         self.sshPort = _config['SSHPort']
         self.sshKeyFilePath = _config['SSHKeyFilePath']
+        self.sshKeyPassword = _config['SSHKeyPassword']
 
     def disable_cog(self, cog):
         if cog not in self.disabled_cogs:
