@@ -50,6 +50,10 @@ class Config:
         self.mysqlHost = _config["MysqlHost"]
         self.mysqlUsername = _config["MysqlUsername"]
         self.mysqlPassword = _config["MysqlPassword"]
+        self.sshUsername = _config['SSHUsername']
+        self.sshPassword = _config['SSHPassword']
+        self.sshPort = _config['SSHPort']
+        self.sshKeyFilePath = _config['SSHKeyFilePath']
 
     def disable_cog(self, cog):
         if cog not in self.disabled_cogs:

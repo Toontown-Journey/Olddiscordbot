@@ -10,6 +10,11 @@
   "Disabled Cogs": [],
   "MysqlAddress": "localhost",
   "MysqlUsername": "SomeUsername",
-  "MysqlPassword": "SomePassword"
+  "MysqlPassword": "SomePassword",
+  "SSHUsername": "SomeUsername",
+  "SSHPassword": "SomePassword",
+  "SSHPort": "20",
+  "SSHKeyFilePath": "/~"
+
 }
 
