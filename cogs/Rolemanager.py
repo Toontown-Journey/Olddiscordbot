@@ -8,6 +8,7 @@ import discord
 from discord.ext import commands
 #import paramiko 
 from core.Config import get_config
+from random import randrange
 
 def calculate_time(join_time):
     date1 = date.today()
@@ -35,32 +36,32 @@ class Rolemanager(commands.Cog):
 
 
 
-    def get_total_messages(self, member):
-        sql = 'SELECT * FROM total_messages'
+    def get_total_experience(self, member):
+        sql = 'SELECT * FROM experience'
         try:
             cursor.execute(sql)
 
             results = cursor.fetchall()
             for row in results:
                 resultsMember = row[0]
-                totalMessages = row[1]
+                totalExperience = row[1]
                 if member == resultsMember:
-                    return totalMessages
+                    return totalExperience
                 
             return "New user"
         except:
             print('Error: Unable to fetch data')
 
-    def set_total_messages(self, member, totalMessages):
-        sql = "INSERT INTO total_messages( " + member  + ','  + " " + totalMessages + ")"
+    def set_total_experience(self, member, totalExperience):
+        sql = "INSERT INTO experience( " + member  + ','  + " " + totalExperience + ")"
         try:
             self.cursor.execute(sql)
             self.db.commit()
         except:
             db.rollback()
 
-    def update_total_messages(self, member, totalMessages):
-        sql = "UPDATE total_messages SET Messages = " + totalMessages + " WHERE Name = " + member
+    def update_total_experience(self, member, totalExperience):
+        sql = "UPDATE experience SET xp = " + totalExperience + " WHERE member = " + member
         try:
             self.cursor.execute(sql)
             self.db.commit()
@@ -74,19 +75,19 @@ class Rolemanager(commands.Cog):
         if message.channel.id == 708507541784494111:
             await message.add_reaction('✅')
             await message.add_reaction('❌')
-        member = message.author
-        if self.get_total_messages(member) == 'New user':
+        member = message.author.id
+        if self.get_total_experience(member) == 'New user':
            #No entry for this member, create a new one
-            member.totalMessages = 0
-            self.set_total_messages(member, member.totalMessages)
+            member.totalExperience = 0
+            self.set_total_experience(member, member.totalExperience)
         else:
-            member.totalMessages = self.get_total_messages(member)
+            member.totalExperience = self.get_total_experience(member)
  
-        member.totalMessages += 1
+        member.totalExperience += randrange(1,10)
 
-        self.update_total_messages(member, member.totalMessages)
+        self.update_total_experience(member, member.totalExperience)
         weeks = calculate_time(member.joined_at)
-        if weeks >= 2 and member.totalMessages >= 100:
+        if weeks >= 2 and member.totalExperience >= 500:
             await member.add_roles(discord.utils.get(member.guild.roles, name='Toons+'))
 
 
