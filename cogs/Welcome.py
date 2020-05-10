@@ -3,6 +3,7 @@
 from discord.ext import commands
 
 from core.Config import get_config
+import discord
 
 
 class Welcome(commands.Cog):
@@ -20,7 +21,7 @@ class Welcome(commands.Cog):
         channel = member.guild.system_channel
         msg = 'Welcome to the discord, {0}! Please read the rules and enjoy your stay!'
         await channel.send(msg.format(member))
-
+        member.add_roles(discord.utils.get(member.guild.roles, name='Toons'))
     @commands.Cog.listener()
     async def on_member_remove(self, member):
         channel = member.guild.system_channel

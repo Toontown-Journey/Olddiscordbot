@@ -24,8 +24,9 @@ class Rolemanager(commands.Cog):
         self.mypkey = paramiko.RSAKey.from_private_key_file(config.sshKeyFilePath, config.sshKeyPassword)
         with SSHTunnelForwarder( (config.mysqlHost, config.sshPort),
                                  ssh_username=config.sshUsername,
+                                 ssh_password=config.sshPassword,
                                  ssh_pkey=self.mypkey,
-                                 remote_bind_address=(config.mysqlHost, config.sshPort)) as tunnel:
+                                 remote_bind_address=('localhost', config.sshPort)) as tunnel:
              self.db = MySQLdb.connect('localhost', config.mysqlUsername, config.mysqlPassword, "anonuwzz_discord")
              self.cursor = self.db.cursor
 
