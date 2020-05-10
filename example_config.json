@@ -13,7 +13,7 @@
   "MysqlPassword": "SomePassword",
   "SSHUsername": "SomeUsername",
   "SSHPassword": "SomePassword",
-  "SSHPort": "20",
+  "SSHPort": 20,
   "SSHKeyFilePath": "/~",
   "SSHKeyPassword": "SomePassword"
 
