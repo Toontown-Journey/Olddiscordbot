@@ -35,6 +35,8 @@ class Rolemanager(commands.Cog):
                 totalMessages = row[1]
                 if member == resultsMember:
                     return totalMessages
+                
+            return "New user"
         except:
             print('Error: Unable to fetch data')
 
@@ -62,12 +64,13 @@ class Rolemanager(commands.Cog):
             await message.add_reaction('✅')
             await message.add_reaction('❌')
         member = message.author
-        try:
-            member.totalMessages = self.get_total_messages(member)
-        except:
-            #No entry for this member, create a new one
+        if self.get_total_messages(member) == 'New user':
+           #No entry for this member, create a new one
             member.totalMessages = 0
             self.set_total_messages(member, member.totalMessages)
+        else:
+            member.totalMessages = self.get_total_messages(member)
+ 
         member.totalMessages += 1
 
         self.update_total_messages(member, member.totalMessages)
