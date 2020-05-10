@@ -25,7 +25,7 @@ class Rolemanager(commands.Cog):
         with SSHTunnelForwarder( (config.mysqlHost, config.sshPort),
                                  ssh_username=config.sshUsername,
                                  ssh_pkey=mypkey,
-                                 remote_bind_address=(config.mysqlHost, 3306)) as tunnel:
+                                 remote_bind_address=(config.mysqlHost, config.sshPort)) as tunnel:
              self.db = MySQLdb.connect('localhost', config.mysqlUsername, config.mysqlPassword, "anonuwzz_discord")
              self.cursor = self.db.cursor
 
