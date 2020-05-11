@@ -21,7 +21,7 @@ class Welcome(commands.Cog):
         channel = member.guild.system_channel
         msg = 'Welcome to the discord, {0}! Please read the rules and enjoy your stay!'
         await channel.send(msg.format(member))
-        member.add_roles(discord.utils.get(member.guild.roles, name='Toons'))
+        await member.add_roles(discord.utils.get(member.guild.roles, name='Toons'))
 
     # future implementation
     '''@commands.Cog.listener()
